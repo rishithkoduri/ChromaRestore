@@ -12,11 +12,10 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULT_FOLDER, exist_ok=True)
 
 net = None
-sr = None
 pts = None
 
 def load_models():
-    global net, sr, pts
+    global net, pts
     if net is None:
         protoPath = os.path.join(MODEL_FOLDER, 'colorization_deploy_v2.prototxt')
         weightsPath = os.path.join(MODEL_FOLDER, 'colorization_release_v2.caffemodel')
@@ -30,19 +29,13 @@ def load_models():
         net.getLayer(class8).blobs = [pts.astype("float32")]
         net.getLayer(conv8).blobs = [np.full([1, 313], 2.606, dtype="float32")]
 
-    if sr is None:
-        sr = cv2.dnn_superres.DnnSuperResImpl_create()
-        sr_path = os.path.join(MODEL_FOLDER, 'EDSR_x4.pb')
-        sr.readModel(sr_path)
-        sr.setModel("edsr", 4)
-
 def process_image(image_path, save_path):
     load_models()
     
     frame = cv2.imread(image_path)
     
     height, width = frame.shape[:2]
-    max_dim = 400
+    max_dim = 500
     if max(height, width) > max_dim:
         scale = max_dim / max(height, width)
         frame = cv2.resize(frame, None, fx=scale, fy=scale)
@@ -61,8 +54,13 @@ def process_image(image_path, save_path):
     colorized = np.clip(colorized, 0, 1)
     colorized = (255 * colorized).astype("uint8")
 
-    upscaled = sr.upsample(colorized)
-    cv2.imwrite(save_path, upscaled)
+    upscale_factor = 4
+    new_width = frame.shape[1] * upscale_factor
+    new_height = frame.shape[0] * upscale_factor
+    
+    final_output = cv2.resize(colorized, (new_width, new_height), interpolation=cv2.INTER_LANCZOS4)
+
+    cv2.imwrite(save_path, final_output)
 
 @app.route('/')
 def index():

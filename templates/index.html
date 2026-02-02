@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChromaRestore</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav>
+        <div class="logo">ChromaRestore</div>
+        <div class="nav-actions">
+            <a href="https://www.buymeacoffee.com" target="_blank" class="bmc-button">☕ Buy me a coffee</a>
+            <button id="theme-toggle" class="btn-toggle">🌙</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="hero">
+            <h1>Revive Your Memories</h1>
+            <p>Upload your black & white photos. AI will colorize and upscale them to 4K resolution.</p>
+        </header>
+
+        <div class="workspace">
+            <div class="card upload-card">
+                <div class="upload-area" id="drop-zone">
+                    <span class="icon">📁</span>
+                    <h3>Upload Photo</h3>
+                    <p>Drag & Drop or Click to Browse</p>
+                    <input type="file" id="file-input" accept="image/*" hidden>
+                </div>
+            </div>
+
+            <div class="card preview-card" id="preview-container" style="display: none;">
+                <div class="image-comparison">
+                    <div class="img-wrapper">
+                        <span>Original</span>
+                        <img id="img-original" src="" alt="Original">
+                    </div>
+                    <div class="arrow">➝</div>
+                    <div class="img-wrapper">
+                        <span>Restored (AI)</span>
+                        <img id="img-result" src="" alt="Processing...">
+                        <div class="loader" id="loader"></div>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button id="btn-convert" class="btn-primary">✨ Convert & Upscale</button>
+                    <a id="btn-download" href="#" class="btn-secondary disabled">⬇ Download 4K</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

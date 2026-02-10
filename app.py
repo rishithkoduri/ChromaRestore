@@ -35,7 +35,7 @@ def process_image(image_path, save_path):
     frame = cv2.imread(image_path)
     
     height, width = frame.shape[:2]
-    max_dim = 500
+    max_dim = 600
     if max(height, width) > max_dim:
         scale = max_dim / max(height, width)
         frame = cv2.resize(frame, None, fx=scale, fy=scale)
